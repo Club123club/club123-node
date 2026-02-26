@@ -2,17 +2,17 @@
 //!
 //! 与 `docs/settlement-contract.md`（及 `cera-chain/docs/05-smart-contract/settlement-contract.md`）对应的结算模块。
 //! 负责：收款方余额托管、平台费用计提、提现与日限额、事件与对账。
-use frame_system::pallet_prelude::BlockNumberFor;
-use crate::weights::WeightInfo;
+
 #![cfg_attr(not(feature = "std"), no_std)]
 
 pub use pallet::*;
 
 #[frame_support::pallet]
 pub mod pallet {
+	use super::WeightInfo;
 	use frame_support::{
 		pallet_prelude::*,
-		traits::{Currency, ReservableCurrency, Zero},
+		traits::{Currency, Get, ReservableCurrency, Zero},
 	};
 	use frame_system::pallet_prelude::*;
 
@@ -27,8 +27,8 @@ pub mod pallet {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 		/// 结算用货币（提供 Balance 类型）
 		type Currency: ReservableCurrency<Self::AccountId>;
-		/// 每“天”对应的区块数，用于日限额重置
-		type BlocksPerDay: Get<BlockNumberFor<Self>>;
+		/// 每“天”对应的区块数，用于日限额重置（BlockNumber 来自 frame_system::Config）
+		type BlocksPerDay: Get<<Self as frame_system::Config>::BlockNumber>;
 		/// 结算模块资金账户（Treasury）
 		type TreasuryAccount: Get<Self::AccountId>;
 		type WeightInfo: WeightInfo;
