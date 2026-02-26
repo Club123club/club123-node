@@ -3,6 +3,7 @@
 //! 与 `docs/settlement-contract.md`（及 `cera-chain/docs/05-smart-contract/settlement-contract.md`）对应的结算模块。
 //! 负责：收款方余额托管、平台费用计提、提现与日限额、事件与对账。
 use frame_system::pallet_prelude::BlockNumberFor;
+use crate::weights::WeightInfo;
 #![cfg_attr(not(feature = "std"), no_std)]
 
 pub use pallet::*;
