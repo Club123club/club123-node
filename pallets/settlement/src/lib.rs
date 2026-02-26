@@ -176,7 +176,8 @@ pub mod pallet {
 			let amount = PayeeBalance::<T>::get(&payee);
 			ensure!(amount != Zero::zero(), Error::<T>::ZeroBalance);
 
-			PayeeBalance::<T>::mutate(&payee, |b| *b = Zero::zero());
+			let zero_balance: BalanceOf<T> = Zero::zero();
+			PayeeBalance::<T>::mutate(&payee, |b| *b = zero_balance);
 			// 实际转账由链下或 runtime 侧配合 Treasury 完成；此处仅账本与事件
 			Self::deposit_event(Event::SettlementExecuted { payee, amount });
 			Ok(())
@@ -191,7 +192,8 @@ pub mod pallet {
 			let amount = PlatformFeeBalance::<T>::get();
 			ensure!(amount != Zero::zero(), Error::<T>::ZeroAmount);
 
-			PlatformFeeBalance::<T>::put(Zero::zero());
+			let zero_balance: BalanceOf<T> = Zero::zero();
+			PlatformFeeBalance::<T>::put(zero_balance);
 			Self::deposit_event(Event::PlatformFeeWithdrawn { to, amount });
 			Ok(())
 		}
