@@ -26,11 +26,11 @@ pub mod pallet {
 	pub trait Config: frame_system::Config {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 		/// 结算用货币（提供 Balance 类型）
-		type Currency: ReservableCurrency<Self::AccountId>;
-		/// 每“天”对应的区块数，用于日限额重置（BlockNumber 来自 frame_system::Config）
+		type Currency: ReservableCurrency<<Self as frame_system::Config>::AccountId>;
+		/// 每“天”对应的区块数，用于日限额重置
 		type BlocksPerDay: Get<<Self as frame_system::Config>::BlockNumber>;
 		/// 结算模块资金账户（Treasury）
-		type TreasuryAccount: Get<Self::AccountId>;
+		type TreasuryAccount: Get<<Self as frame_system::Config>::AccountId>;
 		type WeightInfo: WeightInfo;
 	}
 
