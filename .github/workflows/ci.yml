@@ -28,7 +28,7 @@ jobs:
         uses: ./.github/actions/macos-dependencies
 
       - name: Build the template
-        run: cargo build
+        run: cargo build --locked
         timeout-minutes: 90
 
       - name: Run clippy
@@ -61,7 +61,7 @@ jobs:
         uses: ./.github/actions/macos-dependencies
 
       - name: Build the node individually in release mode
-        run: cargo build --package solochain-template-node --release
+        run: cargo build --package solochain-template-node --release --locked
         timeout-minutes: 90
 
       - name: Make sure the node is producing blocks
