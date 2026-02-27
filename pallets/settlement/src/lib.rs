@@ -15,7 +15,7 @@ pub use pallet::*;
 			traits::{Currency, Get, ReservableCurrency},
 		};
 		use frame_system::pallet_prelude::*;
-		use sp_runtime::traits::{
+		use frame_support::sp_runtime::traits::{
 			Zero,
 			Saturating,
 			UniqueSaturatedInto,
