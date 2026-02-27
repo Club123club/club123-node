@@ -12,10 +12,10 @@ pub use pallet::*;
 		use super::WeightInfo;
 		use frame_support::{
 			pallet_prelude::*,
-			sp_runtime::traits::{Saturating, UniqueSaturatedInto},
-			traits::{Currency, Get, ReservableCurrency, Zero},
+			traits::{Currency, Get, ReservableCurrency},
 		};
-	use frame_system::pallet_prelude::*;
+		use frame_system::pallet_prelude::*;
+		use sp_runtime::traits::{Saturating, UniqueSaturatedInto, Zero};
 
 	type BalanceOf<T> =
 		<<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
