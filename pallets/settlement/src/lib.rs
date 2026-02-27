@@ -161,7 +161,16 @@ pub mod pallet {
 			);
 
 			DailyWithdrawal::<T>::try_mutate(&who, |d| -> DispatchResult {
-				*d = d.saturating_add(amount);
+				let new_total = d
+					.checked_add(&amount)
+					.ok_or(Error::<T>::Overflow)?;
+			
+				ensure!(
+					new_total <= config.daily_limit,
+					Error::<T>::ExceedsDailyLimit
+				);
+			
+				*d = new_total;
 				Ok(())
 			})?;
 			Self::deposit_event(Event::SettlementRequested { payee: who, amount });
