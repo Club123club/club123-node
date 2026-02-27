@@ -8,14 +8,13 @@
 pub use pallet::*;
 
 #[frame_support::pallet]
-pub mod pallet {
-	use super::WeightInfo;
-	use sp_runtime::traits::Saturating;
-	use frame_support::{
-		pallet_prelude::*,
-		traits::{Currency, Get, ReservableCurrency, Zero},
-	};
-	use frame_support::sp_runtime::traits::UniqueSaturatedInto;
+	pub mod pallet {
+		use super::WeightInfo;
+		use frame_support::{
+			pallet_prelude::*,
+			sp_runtime::traits::{Saturating, UniqueSaturatedInto},
+			traits::{Currency, Get, ReservableCurrency, Zero},
+		};
 	use frame_system::pallet_prelude::*;
 
 	type BalanceOf<T> =
