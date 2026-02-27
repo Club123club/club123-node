@@ -155,11 +155,6 @@ pub mod pallet {
 				DailyWithdrawal::<T>::remove(&who);
 				LastWithdrawalDay::<T>::insert(&who, day);
 			}
-			let daily = DailyWithdrawal::<T>::get(&who);
-			ensure!(
-				daily.saturating_add(amount) <= config.daily_limit,
-				Error::<T>::ExceedsDailyLimit
-			);
 
 			DailyWithdrawal::<T>::try_mutate(&who, |d| -> DispatchResult {
 				let new_total: BalanceOf<T> = d
