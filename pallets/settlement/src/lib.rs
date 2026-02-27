@@ -27,11 +27,11 @@ pub use pallet::*;
 	pub trait Config: frame_system::Config {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 		/// 结算用货币（提供 Balance 类型）
-		type Currency: ReservableCurrency<<Self as frame_system::Config>::AccountId>;
+		type Currency: ReservableCurrency<Self::AccountId>;
 		/// 每“天”对应的区块数，用于日限额重置
-		type BlocksPerDay: Get<<Self as frame_system::Config>::BlockNumber>;
+		type BlocksPerDay: Get<BlockNumberFor<Self>>;
 		/// 结算模块资金账户（Treasury）
-		type TreasuryAccount: Get<<Self as frame_system::Config>::AccountId>;
+		type TreasuryAccount: Get<Self::AccountId>;
 		type WeightInfo: WeightInfo;
 	}
 
@@ -121,7 +121,8 @@ pub use pallet::*;
 
 			let fee_bps = PayeeConfigs::<T>::get(&payee).map(|c| c.fee_bps).unwrap_or(0);
 			let ten_k = BalanceOf::<T>::from(10_000u32);
-			let fee = amount.saturating_div(ten_k).saturating_mul(BalanceOf::<T>::from(fee_bps as u32));
+			let fee =
+				amount / ten_k * BalanceOf::<T>::from(fee_bps as u32);
 			let net = amount.saturating_sub(fee);
 
 			PayeeBalance::<T>::try_mutate(&payee, |b| -> DispatchResult {
@@ -150,7 +151,7 @@ pub use pallet::*;
 			ensure!(amount <= config.withdrawal_limit, Error::<T>::ExceedsWithdrawalLimit);
 
 			let block = frame_system::Pallet::<T>::block_number();
-			let day = (block / T::BlocksPerDay::get()).unique_saturated_into();
+			let day: u64 = (block / T::BlocksPerDay::get()).unique_saturated_into();
 			if LastWithdrawalDay::<T>::get(&who) != day {
 				DailyWithdrawal::<T>::remove(&who);
 				LastWithdrawalDay::<T>::insert(&who, day);
