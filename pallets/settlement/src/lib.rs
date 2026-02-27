@@ -12,7 +12,7 @@ pub mod pallet {
 	use super::WeightInfo;
 	use frame_support::{
 		pallet_prelude::*,
-		traits::{Currency, Get, ReservableCurrency, Zero},
+		traits::{Currency, Get, ReservableCurrency, UniqueSaturatedInto, Zero},
 	};
 	use frame_system::pallet_prelude::*;
 
@@ -148,7 +148,7 @@ pub mod pallet {
 			ensure!(amount <= config.withdrawal_limit, Error::<T>::ExceedsWithdrawalLimit);
 
 			let block = frame_system::Pallet::<T>::block_number();
-			let day = (block / T::BlocksPerDay::get()) as u64;
+			let day = (block / T::BlocksPerDay::get()).unique_saturated_into::<u64>();
 			if LastWithdrawalDay::<T>::get(&who) != day {
 				DailyWithdrawal::<T>::remove(&who);
 				LastWithdrawalDay::<T>::insert(&who, day);
