@@ -13,11 +13,10 @@ pub use pallet::*;
 		use frame_support::{
 			pallet_prelude::*,
 			traits::{Currency, Get, ReservableCurrency},
+			sp_runtime::traits::{Saturating, Zero},
 		};
 		use frame_system::pallet_prelude::*;
-		use frame_support::sp_runtime::traits::{Saturating, Zero};
-        use sp_runtime::traits::SaturatedConversion;
-		use sp_std::convert::TryInto;
+		use core::convert::TryInto;
 
 	type BalanceOf<T> =
 		<<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
