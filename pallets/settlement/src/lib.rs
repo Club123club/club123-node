@@ -13,8 +13,9 @@ pub mod pallet {
 	use sp_runtime::traits::Saturating;
 	use frame_support::{
 		pallet_prelude::*,
-		traits::{Currency, Get, ReservableCurrency, UniqueSaturatedInto, Zero},
+		traits::{Currency, Get, ReservableCurrency, Zero},
 	};
+	use frame_support::sp_runtime::traits::UniqueSaturatedInto;
 	use frame_system::pallet_prelude::*;
 
 	type BalanceOf<T> =
