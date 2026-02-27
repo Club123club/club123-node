@@ -99,6 +99,7 @@ pub mod pallet {
 		PayeeNotActive,
 		InsufficientBalance,
 		ExceedsDailyLimit,
+		Overflow,
 		ExceedsWithdrawalLimit,
 		ZeroAmount,
 		ZeroBalance,
@@ -161,7 +162,7 @@ pub mod pallet {
 			);
 
 			DailyWithdrawal::<T>::try_mutate(&who, |d| -> DispatchResult {
-				let new_total = d
+				let new_total: BalanceOf<T> = d
 					.checked_add(&amount)
 					.ok_or(Error::<T>::Overflow)?;
 			
