@@ -151,7 +151,7 @@ pub mod pallet {
 			ensure!(amount <= config.withdrawal_limit, Error::<T>::ExceedsWithdrawalLimit);
 
 			let block = frame_system::Pallet::<T>::block_number();
-			let day = (block / T::BlocksPerDay::get()).unique_saturated_into::<u64>();
+			let day = (block / T::BlocksPerDay::get()).unique_saturated_into();
 			if LastWithdrawalDay::<T>::get(&who) != day {
 				DailyWithdrawal::<T>::remove(&who);
 				LastWithdrawalDay::<T>::insert(&who, day);
