@@ -15,7 +15,12 @@ pub use pallet::*;
 			traits::{Currency, Get, ReservableCurrency},
 		};
 		use frame_system::pallet_prelude::*;
-		use sp_runtime::traits::{Saturating, UniqueSaturatedInto, Zero};
+		use sp_runtime::traits::{
+			Zero,
+			Saturating,
+			UniqueSaturatedInto,
+			CheckedAdd,
+		};
 
 	type BalanceOf<T> =
 		<<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
@@ -121,8 +126,9 @@ pub use pallet::*;
 
 			let fee_bps = PayeeConfigs::<T>::get(&payee).map(|c| c.fee_bps).unwrap_or(0);
 			let ten_k = BalanceOf::<T>::from(10_000u32);
-			let fee =
-				amount / ten_k * BalanceOf::<T>::from(fee_bps as u32);
+			let fee = amount
+                .saturating_mul(BalanceOf::<T>::from(fee_bps as u32))
+                / BalanceOf::<T>::from(10_000u32);
 			let net = amount.saturating_sub(fee);
 
 			PayeeBalance::<T>::try_mutate(&payee, |b| -> DispatchResult {
@@ -151,7 +157,10 @@ pub use pallet::*;
 			ensure!(amount <= config.withdrawal_limit, Error::<T>::ExceedsWithdrawalLimit);
 
 			let block = frame_system::Pallet::<T>::block_number();
-			let day: u64 = (block / T::BlocksPerDay::get()).unique_saturated_into();
+			let blocks_per_day = T::BlocksPerDay::get();
+            ensure!(!blocks_per_day.is_zero(), Error::<T>::Overflow);
+
+            let day: u64 = (block / blocks_per_day).unique_saturated_into();
 			if LastWithdrawalDay::<T>::get(&who) != day {
 				DailyWithdrawal::<T>::remove(&who);
 				LastWithdrawalDay::<T>::insert(&who, day);
