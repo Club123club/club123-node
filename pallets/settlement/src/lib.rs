@@ -15,7 +15,8 @@ pub use pallet::*;
 			traits::{Currency, Get, ReservableCurrency},
 		};
 		use frame_system::pallet_prelude::*;
-		use sp_runtime::traits::{Saturating, SaturatedConversion, Zero};
+		use frame_support::sp_runtime::traits::{Saturating, Zero};
+        use sp_runtime::traits::SaturatedConversion;
 		use sp_std::convert::TryInto;
 
 	type BalanceOf<T> =
@@ -127,11 +128,11 @@ pub use pallet::*;
 			let net = amount.saturating_sub(fee);
 
 			PayeeBalance::<T>::try_mutate(&payee, |b| -> DispatchResult {
-				*b = (*b).saturating_add(net);
+				*b = b.clone().saturating_add(net);
 				Ok(())
 			})?;
 			PlatformFeeBalance::<T>::try_mutate(|f| -> DispatchResult {
-				*f = (*f).saturating_add(fee);
+				*f = f.clone().saturating_add(fee);
 				Ok(())
 			})?;
 
