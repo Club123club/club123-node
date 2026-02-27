@@ -127,11 +127,11 @@ pub use pallet::*;
 			let net = amount.saturating_sub(fee);
 
 			PayeeBalance::<T>::try_mutate(&payee, |b| -> DispatchResult {
-				*b = b.saturating_add(net);
+				*b = (*b).saturating_add(net);
 				Ok(())
 			})?;
 			PlatformFeeBalance::<T>::try_mutate(|f| -> DispatchResult {
-				*f = f.saturating_add(fee);
+				*f = (*f).saturating_add(fee);
 				Ok(())
 			})?;
 
