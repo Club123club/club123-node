@@ -15,7 +15,7 @@ pub use pallet::*;
 			traits::{Currency, Get, ReservableCurrency},
 		};
 		use frame_system::pallet_prelude::*;
-		use sp_runtime::traits::{Saturating, UniqueSaturatedInto, Zero};
+		use sp_runtime::traits::{Saturating, SaturatedConversion, Zero};
 
 	type BalanceOf<T> =
 		<<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
@@ -151,7 +151,7 @@ pub use pallet::*;
 			ensure!(amount <= config.withdrawal_limit, Error::<T>::ExceedsWithdrawalLimit);
 
 			let block = frame_system::Pallet::<T>::block_number();
-			let day: u64 = (block / T::BlocksPerDay::get()).unique_saturated_into();
+			let day: u64 = (block / T::BlocksPerDay::get()).saturated_into::<u64>();
 			if LastWithdrawalDay::<T>::get(&who) != day {
 				DailyWithdrawal::<T>::remove(&who);
 				LastWithdrawalDay::<T>::insert(&who, day);

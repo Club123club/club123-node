@@ -12,7 +12,7 @@ members = [
     "pallets/settlement",
     "runtime",
 ]
-resolver = "1"
+resolver = "2"
 
 [workspace.dependencies]
 solochain-template-runtime = { path = "./runtime", default-features = false }
